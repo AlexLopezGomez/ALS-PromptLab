@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block titulo %}Registro · PromptLab{% endblock %}
+
+{% block content %}
+<article class="pl-auth-card">
+    <h1>Crear cuenta</h1>
+    <form method="post" action="{{ url_for('auth.registro') }}">
+        <label>Nombre
+            <input type="text" name="nombre" required value="{{ nombre or '' }}">
+        </label>
+        <label>Email
+            <input type="email" name="email" required value="{{ email or '' }}">
+        </label>
+        <label>Contraseña
+            <input type="password" name="password" required minlength="6">
+        </label>
+        <label>Repite la contraseña
+            <input type="password" name="password2" required minlength="6">
+        </label>
+        <button type="submit">Crear cuenta</button>
+    </form>
+    <p>¿Ya tienes cuenta? <a href="{{ url_for('auth.login') }}">Inicia sesión</a>.</p>
+</article>
+{% endblock %}

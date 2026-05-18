@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block titulo %}Dashboard · PromptLab{% endblock %}
+
+{% block breadcrumbs %}
+<nav aria-label="breadcrumb" class="pl-breadcrumbs">
+    <ul>
+        <li>Dashboard</li>
+    </ul>
+</nav>
+{% endblock %}
+
+{% block content %}
+<header class="pl-hero">
+    <h1>Hola, {{ current_user.nombre }}</h1>
+    <p>Crea, organiza y evalúa tus prompts en un solo lugar.</p>
+</header>
+
+<section class="grid">
+    <article class="pl-card">
+        <h3>{{ num_prompts }}</h3>
+        <p>Prompts creados</p>
+        <a href="{{ url_for('prompts.mis_prompts') }}" role="button" class="secondary">Ver mis prompts</a>
+    </article>
+    <article class="pl-card">
+        <h3>{{ num_colecciones }}</h3>
+        <p>Colecciones</p>
+        <a href="{{ url_for('colecciones.lista') }}" role="button" class="secondary">Ver colecciones</a>
+    </article>
+    <article class="pl-card">
+        <h3>+</h3>
+        <p>Crear contenido</p>
+        <a href="{{ url_for('prompts.nuevo') }}" role="button">Nuevo prompt</a>
+    </article>
+</section>
+
+<h2>Últimos prompts en la comunidad</h2>
+{% if ultimos %}
+<div class="pl-prompt-grid">
+    {% for it in ultimos %}
+    <article class="pl-prompt-card">
+        <h4><a href="{{ url_for('prompts.detalle', safe=it.safe) }}">{{ it.prompt.titulo }}</a></h4>
+        <p><small>{{ it.prompt.fecha_creacion | fechabonita }}</small></p>
+        <p>{{ it.prompt.contenido[:140] }}{% if it.prompt.contenido|length > 140 %}…{% endif %}</p>
+        {% if it.prompt.tags %}
+        <div class="pl-tags">
+            {% for t in it.prompt.tags %}<span class="pl-tag">{{ t }}</span>{% endfor %}
+        </div>
+        {% endif %}
+    </article>
+    {% endfor %}
+</div>
+{% else %}
+<p><em>Todavía no hay prompts. Sé el primero en crear uno.</em></p>
+{% endif %}
+{% endblock %}

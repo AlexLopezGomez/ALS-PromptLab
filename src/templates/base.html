@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block titulo %}PromptLab{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
+</head>
+<body>
+    <nav class="pl-navbar container-fluid">
+        <ul>
+            <li><a href="{{ url_for('index') }}" class="pl-brand"><strong>PromptLab</strong></a></li>
+        </ul>
+        <ul>
+            <li><a href="{{ url_for('prompts.lista') }}">Explorar</a></li>
+            <li><a href="{{ url_for('categorias.lista') }}">Categorías</a></li>
+            {% if current_user.is_authenticated %}
+                <li><a href="{{ url_for('prompts.mis_prompts') }}">Mis Prompts</a></li>
+                <li><a href="{{ url_for('colecciones.lista') }}">Mis Colecciones</a></li>
+                <li><a href="{{ url_for('dashboard') }}">{{ current_user.nombre }}</a></li>
+                <li><a href="{{ url_for('auth.logout') }}" class="pl-link-danger">Salir</a></li>
+            {% else %}
+                <li><a href="{{ url_for('auth.login') }}">Entrar</a></li>
+                <li><a href="{{ url_for('auth.registro') }}" role="button" class="pl-btn-primary">Registro</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+
+    <main class="container">
+        {% block breadcrumbs %}{% endblock %}
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="pl-flashes">
+                    {% for cat, msg in messages %}
+                        <div class="pl-flash pl-flash-{{ cat }}">{{ msg }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="container">
+        <small>PromptLab &middot; Sirope + Redis + Flask</small>
+    </footer>
+</body>
+</html>

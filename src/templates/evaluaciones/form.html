@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block titulo %}{{ 'Editar' if evaluacion else 'Nueva' }} evaluación · PromptLab{% endblock %}
+
+{% block breadcrumbs %}
+<nav aria-label="breadcrumb" class="pl-breadcrumbs">
+    <ul>
+        <li><a href="{{ url_for('index') }}">Inicio</a></li>
+        <li><a href="{{ url_for('prompts.lista') }}">Explorar</a></li>
+        <li><a href="{{ url_for('prompts.detalle', safe=prompt_safe) }}">{{ prompt.titulo }}</a></li>
+        <li>{{ 'Editar' if evaluacion else 'Nueva' }} evaluación</li>
+    </ul>
+</nav>
+{% endblock %}
+
+{% block content %}
+<article>
+    <h1>{{ 'Editar evaluación' if evaluacion else 'Añadir evaluación' }}</h1>
+    <p>Prompt: <strong>{{ prompt.titulo }}</strong></p>
+    <form method="post">
+        <label>Modelo
+            <input type="text" name="modelo" required value="{{ form.modelo or '' }}"
+                   placeholder="GPT-4, Claude, Llama 3…">
+        </label>
+        <label>Respuesta obtenida
+            <textarea name="respuesta" rows="8" required>{{ form.respuesta or '' }}</textarea>
+        </label>
+        <label>Puntuación (1-5)
+            <select name="puntuacion" required>
+                {% for i in range(1, 6) %}
+                    <option value="{{ i }}"
+                        {% if (form.puntuacion|string) == (i|string) %}selected{% endif %}>
+                        {{ i }} {% for _ in range(i) %}★{% endfor %}
+                    </option>
+                {% endfor %}
+            </select>
+        </label>
+        <label>Notas
+            <textarea name="notas" rows="3">{{ form.notas or '' }}</textarea>
+        </label>
+        <div class="pl-form-actions">
+            <button type="submit">{{ 'Guardar cambios' if evaluacion else 'Crear evaluación' }}</button>
+            <a href="{{ url_for('prompts.detalle', safe=prompt_safe) }}" role="button" class="secondary">Cancelar</a>
+        </div>
+    </form>
+</article>
+{% endblock %}

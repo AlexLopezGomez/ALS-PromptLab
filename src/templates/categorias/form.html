@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block titulo %}{{ 'Editar' if categoria else 'Nueva' }} categoría · PromptLab{% endblock %}
+
+{% block breadcrumbs %}
+<nav aria-label="breadcrumb" class="pl-breadcrumbs">
+    <ul>
+        <li><a href="{{ url_for('index') }}">Inicio</a></li>
+        <li><a href="{{ url_for('categorias.lista') }}">Categorías</a></li>
+        <li>{{ 'Editar' if categoria else 'Nueva' }}</li>
+    </ul>
+</nav>
+{% endblock %}
+
+{% block content %}
+<article>
+    <h1>{{ 'Editar categoría' if categoria else 'Crear categoría' }}</h1>
+    <form method="post">
+        <label>Nombre
+            <input type="text" name="nombre" required value="{{ form.nombre or '' }}">
+        </label>
+        <label>Descripción
+            <textarea name="descripcion" rows="3">{{ form.descripcion or '' }}</textarea>
+        </label>
+        <div class="pl-form-actions">
+            <button type="submit">{{ 'Guardar cambios' if categoria else 'Crear categoría' }}</button>
+            <a href="{{ url_for('categorias.lista') }}" role="button" class="secondary">Cancelar</a>
+        </div>
+    </form>
+</article>
+{% endblock %}

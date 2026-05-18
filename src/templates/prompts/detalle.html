@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% block titulo %}{{ prompt.titulo }} · PromptLab{% endblock %}
+
+{% block breadcrumbs %}
+<nav aria-label="breadcrumb" class="pl-breadcrumbs">
+    <ul>
+        <li><a href="{{ url_for('index') }}">Inicio</a></li>
+        <li><a href="{{ url_for('prompts.lista') }}">Explorar</a></li>
+        <li>{{ prompt.titulo }}</li>
+    </ul>
+</nav>
+{% endblock %}
+
+{% block content %}
+<article class="pl-prompt-detail">
+    <header>
+        <h1>{{ prompt.titulo }}</h1>
+        <p class="pl-meta">
+            {% if autor %}Por <strong>{{ autor.nombre }}</strong>{% endif %}
+            · <small>{{ prompt.fecha_creacion | fechabonita }}</small>
+            {% if categoria %} · Categoría: <em>{{ categoria.nombre }}</em>{% endif %}
+        </p>
+        {% if prompt.tags %}
+        <div class="pl-tags">
+            {% for t in prompt.tags %}<span class="pl-tag">{{ t }}</span>{% endfor %}
+        </div>
+        {% endif %}
+    </header>
+
+    <section class="pl-prompt-content">
+        <pre>{{ prompt.contenido }}</pre>
+    </section>
+
+    <footer class="pl-prompt-actions">
+        {% if es_autor %}
+            <a href="{{ url_for('prompts.editar', safe=safe) }}" role="button" class="secondary">Editar</a>
+            <a href="{{ url_for('prompts.confirmar_borrar', safe=safe) }}" role="button" class="pl-btn-danger">Borrar</a>
+        {% endif %}
+        {% if current_user.is_authenticated %}
+            <a href="{{ url_for('evaluaciones.nuevo', prompt_safe=safe) }}" role="button">Añadir evaluación</a>
+        {% endif %}
+    </footer>
+</article>
+
+<section>
+    <h2>Evaluaciones ({{ evaluaciones|length }})</h2>
+    {% if evaluaciones %}
+        {% for it in evaluaciones %}
+        <article class="pl-eval-card">
+            <header>
+                <strong>{{ it.ev.modelo }}</strong>
+                <span class="pl-score">
+                    {% for i in range(1, 6) %}{% if i <= it.ev.puntuacion %}★{% else %}☆{% endif %}{% endfor %}
+                </span>
+                {% if it.autor %}<small>· {{ it.autor.nombre }}</small>{% endif %}
+                <small>· {{ it.ev.fecha | fechabonita }}</small>
+            </header>
+            <p><strong>Respuesta:</strong></p>
+            <pre>{{ it.ev.respuesta }}</pre>
+            {% if it.ev.notas %}
+            <p><strong>Notas:</strong> {{ it.ev.notas }}</p>
+            {% endif %}
+            {% if it.es_mia %}
+            <footer class="pl-eval-actions">
+                <a href="{{ url_for('evaluaciones.editar', safe=it.safe) }}" role="button" class="secondary">Editar</a>
+                <form method="post" action="{{ url_for('evaluaciones.borrar', safe=it.safe) }}"
+                      onsubmit="return confirm('¿Eliminar esta evaluación?');" class="pl-inline-form">
+                    <button type="submit" class="pl-btn-danger">Borrar</button>
+                </form>
+            </footer>
+            {% endif %}
+        </article>
+        {% endfor %}
+    {% else %}
+        <p><em>Todavía no hay evaluaciones para este prompt.</em></p>
+    {% endif %}
+</section>
+
+<section>
+    <h2>Comentarios ({{ comentarios|length }})</h2>
+    {% if comentarios %}
+        {% for it in comentarios %}
+        <article class="pl-comment">
+            <header>
+                <strong>{{ it.autor.nombre if it.autor else 'Anónimo' }}</strong>
+                <small>· {{ it.com.fecha | fechabonita }}</small>
+            </header>
+            <p>{{ it.com.texto }}</p>
+            {% if it.puede_borrar %}
+            <form method="post" action="{{ url_for('comentarios.borrar', safe=it.safe) }}"
+                  onsubmit="return confirm('¿Eliminar comentario?');" class="pl-inline-form">
+                <button type="submit" class="pl-btn-danger outline">Borrar</button>
+            </form>
+            {% endif %}
+        </article>
+        {% endfor %}
+    {% else %}
+        <p><em>Aún no hay comentarios.</em></p>
+    {% endif %}
+
+    {% if current_user.is_authenticated %}
+    <form method="post" action="{{ url_for('comentarios.nuevo', prompt_safe=safe) }}" class="pl-comment-form">
+        <label>Añade un comentario
+            <textarea name="texto" rows="3" required placeholder="Escribe tu comentario…"></textarea>
+        </label>
+        <button type="submit">Publicar</button>
+    </form>
+    {% else %}
+    <p><a href="{{ url_for('auth.login') }}">Inicia sesión</a> para comentar.</p>
+    {% endif %}
+</section>
+
+<p><a href="{{ url_for('prompts.lista') }}">← Volver a la lista</a></p>
+{% endblock %}

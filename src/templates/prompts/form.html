@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block titulo %}{{ 'Editar' if prompt else 'Nuevo' }} prompt · PromptLab{% endblock %}
+
+{% block breadcrumbs %}
+<nav aria-label="breadcrumb" class="pl-breadcrumbs">
+    <ul>
+        <li><a href="{{ url_for('index') }}">Inicio</a></li>
+        <li><a href="{{ url_for('prompts.lista') }}">Explorar</a></li>
+        <li>{{ 'Editar' if prompt else 'Nuevo' }}</li>
+    </ul>
+</nav>
+{% endblock %}
+
+{% block content %}
+<article>
+    <h1>{{ 'Editar prompt' if prompt else 'Crear nuevo prompt' }}</h1>
+    <form method="post">
+        <label>Título
+            <input type="text" name="titulo" required maxlength="200"
+                   value="{{ form.titulo or '' }}">
+        </label>
+        <label>Contenido del prompt
+            <textarea name="contenido" rows="8" required>{{ form.contenido or '' }}</textarea>
+        </label>
+        <label>Categoría
+            <select name="categoria_oid">
+                <option value="">— Sin categoría —</option>
+                {% for safe_c, c in categorias %}
+                    <option value="{{ safe_c }}"
+                        {% if form.categoria_oid == safe_c %}selected{% endif %}>
+                        {{ c.nombre }}
+                    </option>
+                {% endfor %}
+            </select>
+        </label>
+        <label>Etiquetas (separadas por comas)
+            <input type="text" name="tags" value="{{ form.tags or '' }}"
+                   placeholder="creatividad, programación, marketing">
+        </label>
+        <div class="pl-form-actions">
+            <button type="submit">{{ 'Guardar cambios' if prompt else 'Crear prompt' }}</button>
+            {% if prompt %}
+                <a href="{{ url_for('prompts.detalle', safe=safe) }}" role="button" class="secondary">Cancelar</a>
+            {% else %}
+                <a href="{{ url_for('prompts.lista') }}" role="button" class="secondary">Cancelar</a>
+            {% endif %}
+        </div>
+    </form>
+</article>
+{% endblock %}

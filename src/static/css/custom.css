@@ -1,0 +1,218 @@
+/* PromptLab — estilos personalizados sobre Pico CSS */
+
+:root {
+    --pl-accent: #4f46e5;
+    --pl-accent-hover: #4338ca;
+    --pl-danger: #dc2626;
+    --pl-success: #16a34a;
+    --pl-info: #2563eb;
+    --pl-muted: #6b7280;
+    --pl-soft: #f5f5fb;
+}
+
+/* Navbar */
+.pl-navbar {
+    background: linear-gradient(90deg, #1e1b4b 0%, var(--pl-accent) 100%);
+    padding: 0.6rem 1.2rem;
+    border-bottom: 3px solid var(--pl-accent-hover);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+.pl-navbar a,
+.pl-navbar a:hover {
+    color: #fff;
+    text-decoration: none;
+}
+.pl-navbar .pl-brand {
+    font-size: 1.2rem;
+    letter-spacing: 0.5px;
+}
+.pl-navbar .pl-btn-primary {
+    background: #fff;
+    color: var(--pl-accent) !important;
+    padding: 0.3rem 0.7rem;
+    border-radius: 6px;
+    font-weight: 600;
+}
+.pl-navbar .pl-link-danger {
+    color: #ffd5d5 !important;
+}
+
+/* Breadcrumbs */
+.pl-breadcrumbs ul {
+    list-style: none;
+    padding: 0;
+    margin: 1rem 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    font-size: 0.9rem;
+    color: var(--pl-muted);
+}
+.pl-breadcrumbs li + li::before {
+    content: "›";
+    margin-right: 0.4rem;
+    color: var(--pl-muted);
+}
+
+/* Flash messages */
+.pl-flashes {
+    margin: 1rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+.pl-flash {
+    padding: 0.7rem 1rem;
+    border-radius: 6px;
+    border-left: 4px solid;
+    font-size: 0.95rem;
+}
+.pl-flash-success { background: #ecfdf5; border-color: var(--pl-success); color: #064e3b; }
+.pl-flash-error,
+.pl-flash-danger  { background: #fef2f2; border-color: var(--pl-danger);  color: #7f1d1d; }
+.pl-flash-info    { background: #eff6ff; border-color: var(--pl-info);    color: #1e3a8a; }
+.pl-flash-warning { background: #fffbeb; border-color: #d97706; color: #78350f; }
+
+/* Tags */
+.pl-tags { margin-top: 0.5rem; display: flex; flex-wrap: wrap; gap: 0.3rem; }
+.pl-tag {
+    display: inline-block;
+    background: var(--pl-soft);
+    color: var(--pl-accent);
+    border: 1px solid #e0e7ff;
+    border-radius: 999px;
+    padding: 0.15rem 0.7rem;
+    font-size: 0.78rem;
+    font-weight: 500;
+}
+
+/* Score / rating */
+.pl-score {
+    color: #f59e0b;
+    letter-spacing: 2px;
+    font-size: 1rem;
+}
+
+/* Prompt cards */
+.pl-prompt-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1rem;
+    margin: 1rem 0;
+}
+.pl-prompt-card {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 1rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+.pl-prompt-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(79, 70, 229, 0.1);
+}
+.pl-prompt-card h3,
+.pl-prompt-card h4 { margin: 0 0 0.4rem 0; }
+.pl-prompt-card a { text-decoration: none; }
+.pl-meta { color: var(--pl-muted); font-size: 0.85rem; }
+
+/* Detail */
+.pl-prompt-detail .pl-prompt-content pre {
+    background: var(--pl-soft);
+    border-left: 4px solid var(--pl-accent);
+    padding: 1rem;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    border-radius: 6px;
+}
+.pl-prompt-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+}
+
+/* Evaluation card */
+.pl-eval-card {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 1rem;
+    margin-bottom: 0.8rem;
+}
+.pl-eval-card pre {
+    background: #fafafa;
+    padding: 0.8rem;
+    border-radius: 6px;
+    white-space: pre-wrap;
+}
+.pl-eval-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+/* Comments */
+.pl-comment {
+    background: #fff;
+    border-left: 3px solid var(--pl-accent);
+    padding: 0.6rem 0.9rem;
+    margin-bottom: 0.5rem;
+    border-radius: 4px;
+}
+.pl-comment-form { margin-top: 1rem; }
+
+/* Inline form */
+.pl-inline-form { display: inline-block; margin: 0; }
+.pl-inline-form button { margin: 0; }
+
+/* Buttons */
+.pl-btn-danger {
+    background: var(--pl-danger);
+    border-color: var(--pl-danger);
+    color: #fff;
+}
+.pl-btn-danger.outline {
+    background: transparent;
+    color: var(--pl-danger);
+}
+
+/* Layout helpers */
+.pl-hero { padding: 1rem 0 1.5rem; }
+.pl-card { text-align: center; padding: 1rem; }
+.pl-list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+.pl-search { display: flex; gap: 0.4rem; align-items: center; margin: 1rem 0; }
+.pl-search input { flex: 1; }
+.pl-form-actions { display: flex; gap: 0.5rem; margin-top: 1rem; }
+.pl-auth-card { max-width: 420px; margin: 2rem auto; }
+
+/* Badges */
+.pl-badge-pub,
+.pl-badge-priv {
+    display: inline-block;
+    padding: 0.1rem 0.5rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+.pl-badge-pub { background: #dcfce7; color: #166534; }
+.pl-badge-priv { background: #fef3c7; color: #92400e; }
+
+/* Danger card */
+.pl-danger-card {
+    border: 1px solid var(--pl-danger);
+    border-radius: 10px;
+    padding: 1.5rem;
+    background: #fef2f2;
+}
+
+/* Error pages */
+.pl-error { text-align: center; padding: 3rem 1rem; }
+.pl-error h1 { color: var(--pl-accent); }

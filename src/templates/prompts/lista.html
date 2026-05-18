@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block titulo %}{{ titulo }} · PromptLab{% endblock %}
+
+{% block breadcrumbs %}
+<nav aria-label="breadcrumb" class="pl-breadcrumbs">
+    <ul>
+        <li><a href="{{ url_for('index') }}">Inicio</a></li>
+        <li>{{ titulo }}</li>
+    </ul>
+</nav>
+{% endblock %}
+
+{% block content %}
+<header class="pl-list-header">
+    <h1>{{ titulo }}</h1>
+    {% if current_user.is_authenticated %}
+        <a href="{{ url_for('prompts.nuevo') }}" role="button">Nuevo prompt</a>
+    {% endif %}
+</header>
+
+{% if not solo_mios %}
+<form method="get" action="{{ url_for('prompts.lista') }}" class="pl-search">
+    <input type="search" name="q" placeholder="Buscar por título o etiqueta…" value="{{ termino }}">
+    <button type="submit">Buscar</button>
+    {% if termino %}<a href="{{ url_for('prompts.lista') }}" role="button" class="secondary">Limpiar</a>{% endif %}
+</form>
+{% endif %}
+
+{% if items %}
+<div class="pl-prompt-grid">
+    {% for it in items %}
+    <article class="pl-prompt-card">
+        <h3><a href="{{ url_for('prompts.detalle', safe=it.safe) }}">{{ it.prompt.titulo }}</a></h3>
+        <p class="pl-meta">
+            {% if it.autor %}<span>Por {{ it.autor.nombre }}</span>{% endif %}
+            {% if it.categoria %} · <span>{{ it.categoria.nombre }}</span>{% endif %}
+            · <small>{{ it.prompt.fecha_creacion | fechabonita }}</small>
+        </p>
+        <p>{{ it.prompt.contenido[:200] }}{% if it.prompt.contenido|length > 200 %}…{% endif %}</p>
+        {% if it.prompt.tags %}
+        <div class="pl-tags">
+            {% for t in it.prompt.tags %}<span class="pl-tag">{{ t }}</span>{% endfor %}
+        </div>
+        {% endif %}
+    </article>
+    {% endfor %}
+</div>
+{% else %}
+<p><em>No se han encontrado prompts{% if termino %} para «{{ termino }}»{% endif %}.</em></p>
+{% endif %}
+
+<p><a href="{{ url_for('dashboard') if current_user.is_authenticated else url_for('index') }}">← Volver</a></p>
+{% endblock %}

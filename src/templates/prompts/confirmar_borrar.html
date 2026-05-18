@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block titulo %}Borrar prompt · PromptLab{% endblock %}
+
+{% block breadcrumbs %}
+<nav aria-label="breadcrumb" class="pl-breadcrumbs">
+    <ul>
+        <li><a href="{{ url_for('index') }}">Inicio</a></li>
+        <li><a href="{{ url_for('prompts.lista') }}">Explorar</a></li>
+        <li><a href="{{ url_for('prompts.detalle', safe=safe) }}">{{ prompt.titulo }}</a></li>
+        <li>Borrar</li>
+    </ul>
+</nav>
+{% endblock %}
+
+{% block content %}
+<article class="pl-danger-card">
+    <h1>¿Borrar este prompt?</h1>
+    <p>Vas a eliminar <strong>{{ prompt.titulo }}</strong>. Esto borrará
+       también todas sus evaluaciones y comentarios, y se retirará de
+       cualquier colección que lo contenga. Esta acción no se puede deshacer.</p>
+    <form method="post" action="{{ url_for('prompts.borrar', safe=safe) }}">
+        <button type="submit" class="pl-btn-danger">Sí, borrar definitivamente</button>
+        <a href="{{ url_for('prompts.detalle', safe=safe) }}" role="button" class="secondary">Cancelar</a>
+    </form>
+</article>
+{% endblock %}

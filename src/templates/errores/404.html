@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block titulo %}Página no encontrada · PromptLab{% endblock %}
+
+{% block content %}
+<article class="pl-error">
+    <h1>404 · No encontrada</h1>
+    <p>La página que buscas no existe o ha sido movida.</p>
+    <a href="{{ url_for('index') }}" role="button">Volver al inicio</a>
+</article>
+{% endblock %}

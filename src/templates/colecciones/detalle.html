@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block titulo %}{{ col.nombre }} · PromptLab{% endblock %}
+
+{% block breadcrumbs %}
+<nav aria-label="breadcrumb" class="pl-breadcrumbs">
+    <ul>
+        <li><a href="{{ url_for('index') }}">Inicio</a></li>
+        <li><a href="{{ url_for('colecciones.lista') }}">Colecciones</a></li>
+        <li>{{ col.nombre }}</li>
+    </ul>
+</nav>
+{% endblock %}
+
+{% block content %}
+<article>
+    <header>
+        <h1>{{ col.nombre }}</h1>
+        <p class="pl-meta">
+            {% if autor %}Por <strong>{{ autor.nombre }}</strong> · {% endif %}
+            {% if col.publica %}<span class="pl-badge-pub">Pública</span>{% else %}<span class="pl-badge-priv">Privada</span>{% endif %}
+        </p>
+        {% if col.descripcion %}<p>{{ col.descripcion }}</p>{% endif %}
+    </header>
+
+    {% if es_owner %}
+    <footer class="pl-prompt-actions">
+        <a href="{{ url_for('colecciones.editar', safe=safe) }}" role="button" class="secondary">Editar</a>
+        <form method="post" action="{{ url_for('colecciones.borrar', safe=safe) }}"
+              onsubmit="return confirm('¿Eliminar esta colección?');" class="pl-inline-form">
+            <button type="submit" class="pl-btn-danger">Borrar</button>
+        </form>
+    </footer>
+    {% endif %}
+</article>
+
+<h2>Prompts en la colección</h2>
+{% if prompts_items %}
+<div class="pl-prompt-grid">
+    {% for it in prompts_items %}
+    <article class="pl-prompt-card">
+        <h3><a href="{{ url_for('prompts.detalle', safe=it.safe) }}">{{ it.prompt.titulo }}</a></h3>
+        <p>{{ it.prompt.contenido[:160] }}{% if it.prompt.contenido|length > 160 %}…{% endif %}</p>
+        {% if es_owner %}
+        <form method="post" action="{{ url_for('colecciones.quitar', safe=safe, prompt_safe=it.safe) }}"
+              onsubmit="return confirm('¿Quitar este prompt de la colección?');" class="pl-inline-form">
+            <button type="submit" class="pl-btn-danger outline">Quitar</button>
+        </form>
+        {% endif %}
+    </article>
+    {% endfor %}
+</div>
+{% else %}
+<p><em>Esta colección no contiene prompts todavía.</em></p>
+{% endif %}
+
+{% if es_owner and candidatos %}
+<h2>Añadir prompts existentes</h2>
+<div class="pl-prompt-grid">
+    {% for c in candidatos %}
+    <article class="pl-prompt-card">
+        <h4>{{ c.prompt.titulo }}</h4>
+        <p>{{ c.prompt.contenido[:120] }}{% if c.prompt.contenido|length > 120 %}…{% endif %}</p>
+        <form method="post" action="{{ url_for('colecciones.agregar', safe=safe, prompt_safe=c.safe) }}"
+              class="pl-inline-form">
+            <button type="submit">Añadir</button>
+        </form>
+    </article>
+    {% endfor %}
+</div>
+{% endif %}
+
+<p><a href="{{ url_for('colecciones.lista') }}">← Volver a colecciones</a></p>
+{% endblock %}

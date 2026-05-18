@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block titulo %}Categorías · PromptLab{% endblock %}
+
+{% block breadcrumbs %}
+<nav aria-label="breadcrumb" class="pl-breadcrumbs">
+    <ul>
+        <li><a href="{{ url_for('index') }}">Inicio</a></li>
+        <li>Categorías</li>
+    </ul>
+</nav>
+{% endblock %}
+
+{% block content %}
+<header class="pl-list-header">
+    <h1>Categorías</h1>
+    {% if current_user.is_authenticated %}
+        <a href="{{ url_for('categorias.nueva') }}" role="button">Nueva categoría</a>
+    {% endif %}
+</header>
+
+{% if items %}
+<table>
+    <thead>
+        <tr><th>Nombre</th><th>Descripción</th><th>Prompts</th><th></th></tr>
+    </thead>
+    <tbody>
+        {% for it in items %}
+        <tr>
+            <td><strong>{{ it.cat.nombre }}</strong></td>
+            <td>{{ it.cat.descripcion or '' }}</td>
+            <td>{{ it.num }}</td>
+            <td>
+                {% if current_user.is_authenticated %}
+                <a href="{{ url_for('categorias.editar', safe=it.safe) }}" role="button" class="secondary outline">Editar</a>
+                <form method="post" action="{{ url_for('categorias.borrar', safe=it.safe) }}"
+                      onsubmit="return confirm('¿Borrar categoría? Los prompts asociados quedarán sin categoría.');"
+                      class="pl-inline-form">
+                    <button type="submit" class="pl-btn-danger outline">Borrar</button>
+                </form>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p><em>Todavía no hay categorías definidas.</em></p>
+{% endif %}
+
+<p><a href="{{ url_for('dashboard') if current_user.is_authenticated else url_for('index') }}">← Volver</a></p>
+{% endblock %}

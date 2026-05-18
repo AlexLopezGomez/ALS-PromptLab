@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block titulo %}Mis colecciones · PromptLab{% endblock %}
+
+{% block breadcrumbs %}
+<nav aria-label="breadcrumb" class="pl-breadcrumbs">
+    <ul>
+        <li><a href="{{ url_for('index') }}">Inicio</a></li>
+        <li>Colecciones</li>
+    </ul>
+</nav>
+{% endblock %}
+
+{% block content %}
+<header class="pl-list-header">
+    <h1>Mis colecciones</h1>
+    <a href="{{ url_for('colecciones.nueva') }}" role="button">Nueva colección</a>
+</header>
+
+{% if propias %}
+<div class="pl-prompt-grid">
+    {% for it in propias %}
+    <article class="pl-prompt-card">
+        <h3><a href="{{ url_for('colecciones.detalle', safe=it.safe) }}">{{ it.col.nombre }}</a></h3>
+        <p class="pl-meta">
+            {{ it.num }} prompt{{ '' if it.num == 1 else 's' }}
+            · {% if it.col.publica %}<span class="pl-badge-pub">Pública</span>{% else %}<span class="pl-badge-priv">Privada</span>{% endif %}
+        </p>
+        <p>{{ it.col.descripcion or '' }}</p>
+    </article>
+    {% endfor %}
+</div>
+{% else %}
+<p><em>Aún no tienes colecciones. Crea la primera para organizar tus prompts.</em></p>
+{% endif %}
+
+<h2>Colecciones públicas de la comunidad</h2>
+{% if publicas %}
+<div class="pl-prompt-grid">
+    {% for it in publicas %}
+    <article class="pl-prompt-card">
+        <h3><a href="{{ url_for('colecciones.detalle', safe=it.safe) }}">{{ it.col.nombre }}</a></h3>
+        <p class="pl-meta">
+            {% if it.autor %}Por <strong>{{ it.autor.nombre }}</strong> · {% endif %}
+            {{ it.num }} prompt{{ '' if it.num == 1 else 's' }}
+        </p>
+        <p>{{ it.col.descripcion or '' }}</p>
+    </article>
+    {% endfor %}
+</div>
+{% else %}
+<p><em>No hay colecciones públicas en este momento.</em></p>
+{% endif %}
+
+<p><a href="{{ url_for('dashboard') }}">← Volver al dashboard</a></p>
+{% endblock %}

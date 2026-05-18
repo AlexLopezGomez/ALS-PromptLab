@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block titulo %}{{ 'Editar' if coleccion else 'Nueva' }} colección · PromptLab{% endblock %}
+
+{% block breadcrumbs %}
+<nav aria-label="breadcrumb" class="pl-breadcrumbs">
+    <ul>
+        <li><a href="{{ url_for('index') }}">Inicio</a></li>
+        <li><a href="{{ url_for('colecciones.lista') }}">Colecciones</a></li>
+        <li>{{ 'Editar' if coleccion else 'Nueva' }}</li>
+    </ul>
+</nav>
+{% endblock %}
+
+{% block content %}
+<article>
+    <h1>{{ 'Editar colección' if coleccion else 'Crear nueva colección' }}</h1>
+    <form method="post">
+        <label>Nombre
+            <input type="text" name="nombre" required value="{{ form.nombre or '' }}">
+        </label>
+        <label>Descripción
+            <textarea name="descripcion" rows="4">{{ form.descripcion or '' }}</textarea>
+        </label>
+        <label>
+            <input type="checkbox" name="publica" {% if form.publica %}checked{% endif %}>
+            Hacer pública (visible para otros usuarios)
+        </label>
+        <div class="pl-form-actions">
+            <button type="submit">{{ 'Guardar cambios' if coleccion else 'Crear colección' }}</button>
+            {% if coleccion %}
+                <a href="{{ url_for('colecciones.detalle', safe=safe) }}" role="button" class="secondary">Cancelar</a>
+            {% else %}
+                <a href="{{ url_for('colecciones.lista') }}" role="button" class="secondary">Cancelar</a>
+            {% endif %}
+        </div>
+    </form>
+</article>
+{% endblock %}
