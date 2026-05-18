@@ -13,15 +13,19 @@ import sirope
 def get_sirope():
     """Crea una instancia de Sirope conectada a Redis.
 
-    Lee la configuración de host, puerto y base de datos desde variables
-    de entorno con valores por defecto razonables para desarrollo local.
+    Prioriza REDIS_URL (formato Railway/Heroku). Si no existe, usa
+    REDIS_HOST, REDIS_PORT y REDIS_DB para desarrollo local.
 
     :return: Instancia de :class:`sirope.Sirope` lista para usarse.
     """
-    host = os.environ.get("REDIS_HOST", "localhost")
-    port = int(os.environ.get("REDIS_PORT", "6379"))
-    db = int(os.environ.get("REDIS_DB", "0"))
-    cliente_redis = redis.Redis(host=host, port=port, db=db)
+    redis_url = os.environ.get("REDIS_URL")
+    if redis_url:
+        cliente_redis = redis.from_url(redis_url)
+    else:
+        host = os.environ.get("REDIS_HOST", "localhost")
+        port = int(os.environ.get("REDIS_PORT", "6379"))
+        db = int(os.environ.get("REDIS_DB", "0"))
+        cliente_redis = redis.Redis(host=host, port=port, db=db)
     return sirope.Sirope(cliente_redis)
 
 
